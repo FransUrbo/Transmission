@@ -64,6 +64,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
+	./autogen.sh
 	./configure \
 		--host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr \
@@ -105,10 +106,11 @@ install: build
 	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
 
 #	# clean RPATH from transmission binary (costela - 2007-10-27)
-	chrpath -d $(CURDIR)/debian/tmp/usr/bin/transmission
-	chrpath -d $(CURDIR)/debian/tmp/usr/bin/transmission-daemon
-	chrpath -d $(CURDIR)/debian/tmp/usr/bin/transmission-remote
-	chrpath -d $(CURDIR)/debian/tmp/usr/bin/transmissioncli
+	@echo -n "Stripping binary: "
+	@(for bin in $(CURDIR)/debian/tmp/usr/bin/*; do \
+		echo -n `basename $$bin`" "; \
+		chrpath -d $$bin; \
+	done)
 
 #	# Install icons and desktop file
 	install -d $(CURDIR)/debian/tmp/usr/share/pixmaps
