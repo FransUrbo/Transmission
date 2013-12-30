@@ -1,0 +1,226 @@
+transmission (svn14216) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Mon, 30 Dec 2013 10:31:57 +0100
+
+transmission (1.75-0) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Sat, 03 Oct 2009 12:47:57 +0000
+
+transmission (1.22-1) unstable; urgency=low
+
+  * New upstream release (Closes: #486274)
+  * debian/control: policy 3.8.0 (no changes)
+
+ -- Leo Costela <costela@debian.org>  Fri, 20 Jun 2008 11:48:30 +0200
+
+transmission (1.21-1) unstable; urgency=low
+
+  * New upstream release (Closes: #482539)
+  * Leo Costela is now the official maintainer
+  * Mentioning the upstream bts in README.debian (Closes: #466761)
+
+ -- Philipp Benner <pbenner@uni-osnabrueck.de>  Tue, 03 Jun 2008 19:09:22 +0200
+
+transmission (1.20-1) unstable; urgency=low
+
+  * new upstream release (closes: #481065):
+    - add build-dep on libcurl-dev
+  * debian/transmission-gtk.menu: better describe menu item (closes: #478212)
+  * debian/control, debian/compat: bump debhelper v7
+  * debian/rules:
+    - some small changes and cleanups for debhelper v7, preparing for a 
+      possible migration to dh
+    - add dh_icon (from Ubuntu, thanks Fávio Martins)
+  * debian/transmission-gtk.install: added usr/share/icons (see above)
+
+ -- Leo Costela <costela@debian.org>  Fri, 16 May 2008 18:05:32 +0200
+
+transmission (1.11-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Leo Costela <costela@debian.org>  Sun, 06 Apr 2008 15:00:37 +0200
+
+transmission (1.10-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Leo Costela <costela@debian.org>  Tue, 01 Apr 2008 23:11:06 +0200
+
+transmission (1.06-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Leo Costela <costela@debian.org>  Mon, 10 Mar 2008 23:58:46 +0100
+
+transmission (1.05-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Leo Costela <costela@debian.org>  Wed, 13 Feb 2008 16:44:52 +0100
+
+transmission (1.04-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Leo Costela <costela@debian.org>  Tue, 05 Feb 2008 01:22:33 +0100
+
+transmission (1.02-1) unstable; urgency=low
+
+  * New upstream release (Closes: #461237, #461778, #460319).
+
+ -- Philipp Benner <pbenner@uni-osnabrueck.de>  Wed, 23 Jan 2008 13:08:22 +0100
+
+transmission (1.00-1) unstable; urgency=low
+
+  * New upstream release
+    (Closes: #458942, #457825, #458202, #452440, #456038, #454802, #458075).
+  * updated maintainer email
+  * debian/patches: removed unneeded patches (dealt with DSFG dirs, see below)
+  * debian/control: 
+      - updated upstream homepage
+      - add DM-upload:yes 
+  * debian/rules: 
+      - update get-orig-source to not remove dirs, DFSG status resolved 
+        upstream
+      - don't rename transmissioncli manpage, renamed upstream
+
+ -- Philipp Benner <pbenner@uni-osnabrueck.de>  Sat, 05 Jan 2008 09:16:52 +0100
+
+transmission (0.96.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #456228).
+  * Added transmission-gtk.mime (Closes: #454801).
+  * Fixed typo (Closes: #456036).
+
+ -- Philipp Benner <mail@philipp-benner.de>  Sat, 15 Dec 2007 20:42:31 +0100
+
+transmission (0.95.dfsg-2) unstable; urgency=low
+
+  * add transmission-common package, to avoid duplication on files
+  * install NEWS as changelog
+  * rename README.Debian-source to README.debian (for consistency), document 
+    current open bug about licence issues
+  * registering transmission to handle torrent files (Closes: #454801)
+    (Philipp Benner)
+  * improved portability (Philipp Benner)
+
+ -- Leo Costela <costela@debian.org>  Thu, 06 Dec 2007 00:46:50 +0100
+
+transmission (0.95.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #454127).
+  * debian/copyright: convert to UTF-8 (Leo "costela" Antunes)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Wed, 05 Dec 2007 14:37:05 +0100
+
+transmission (0.93.dfsg-2) unstable; urgency=low
+
+  * Added missing build-dependency (python).
+  * debian/control: switching to Homepage, Vcs-Browser and Vcs-Svn official
+    fields (Leo "costela" Antunes)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Thu, 22 Nov 2007 12:37:14 +0100
+
+transmission (0.93.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #450522, #450778).
+  * Support for binary-indep target.
+
+ -- Philipp Benner <mail@philipp-benner.de>  Fri, 16 Nov 2007 18:01:47 +0100
+
+transmission (0.91.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #448516).
+  * Using manpages from source package.
+
+ -- Philipp Benner <mail@philipp-benner.de>  Mon, 29 Oct 2007 19:53:02 +0100
+
+transmission (0.90.dfsg-2) unstable; urgency=low
+
+  * Updated manuals.
+  * Converted copyright file to machine interpretable format.
+  * Fixed debian/watch (making file extention group non-capturing)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Sat, 27 Oct 2007 11:05:46 +0200
+
+transmission (0.90.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #447444, #447905).
+  * debian/watch: check for both gz and bz2 archives (Leo "costela" Antunes)
+  * debian/*.manpages: copied manpages from 0.82 into debian dir, since
+    upstream didn't release them this time, for some reason (Leo "costela"
+    Antunes)
+  * debian/rules: add $(CURDIR) to 'make install' call and corrected dir
+    (transmission to tmp), remove RPATH definition from transmission binary
+    (Leo "costela" Antunes)
+  * debian/control: add chrpath build-dep
+  * debian/transmission-cli.*: binary upstream rename from transmissioncli to
+    transmission-cli (Leo "costela" Antunes)
+  * debian/transmission-gtk.*: binary upstream rename from transmission-gtk to
+    transmission (perhaps this will generate some confusion with the package
+    names) (Leo "costela" Antunes)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Fri, 26 Oct 2007 16:02:39 +0200
+
+transmission (0.82.dfsg-1) unstable; urgency=low
+
+  * New upstream release (Closes: #441886)
+  * including transmission deamon tools (Closes: #441072)
+  * updated get-orig-source target
+  * removed debtags from debian/control
+  * added homepage tag to debian/conrtol
+  * removed README.Debian
+
+ -- Philipp Benner <mail@philipp-benner.de>  Sat, 15 Sep 2007 18:58:42 +0200
+
+transmission (0.81.dfsg-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Leo Costela <costela@debian.org>  Fri, 31 Aug 2007 12:38:13 +0200
+
+transmission (0.80.dfsg-1) unstable; urgency=low
+
+  * New upstream release (closes: #437512)
+  * debian/menu: change section from Apps to Applications, according to new
+    policy
+
+ -- Leo Costela <costela@debian.org>  Tue, 21 Aug 2007 01:33:40 +0200
+
+transmission (0.72.dfsg-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Philipp Benner <mail@philipp-benner.de>  Tue,  1 May 2007 12:23:49 +0200
+
+transmission (0.71.dfsg-1) unstable; urgency=low
+
+  * new upstream release (Closes: #419970, #421145)
+  * transmission-cli and transmission-gtk have to replace old transmission
+  + package (Closes: #421196)
+  * making the build process more verbose
+  * patched the version.sh script to run without excluded directories
+  * destdir patch for makefiles no longer required
+
+ -- Philipp Benner <mail@philipp-benner.de>  Fri, 27 Apr 2007 19:37:05 +0200
+
+transmission (0.6.1.dfsg-2) unstable; urgency=low
+
+  * new desktop file and xpm icon (Closes: #394464)
+  * watchfile version mangle for debian version
+  * distributing command line and gui client in separated binary packages
+    (Closes: 415140)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Wed,  4 Apr 2007 14:17:18 +0200
+
+transmission (0.6.1.dfsg-1) unstable; urgency=low
+
+  * Initial release (Closes: #358878)
+
+ -- Philipp Benner <mail@philipp-benner.de>  Tue, 29 Aug 2006 20:50:41 +0200
+

@@ -1,0 +1,5 @@
+debian/tmp/usr/bin/transmission
+debian/tmp/usr/share/locale
+debian/tmp/usr/share/applications
+debian/tmp/usr/share/pixmaps
+debian/tmp/usr/share/icons
