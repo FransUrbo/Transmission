@@ -1,3 +1,6 @@
-debian/tmp/usr/bin/transmissioncli
+debian/tmp/usr/bin/transmission-cli
 debian/tmp/usr/bin/transmission-daemon
 debian/tmp/usr/bin/transmission-remote
+debian/tmp/usr/bin/transmission-create
+debian/tmp/usr/bin/transmission-edit
+debian/tmp/usr/bin/transmission-show
