@@ -1,0 +1,25 @@
+--- a/daemon/remote.c
++++ b/daemon/remote.c
+@@ -1808,11 +1808,22 @@
+     else
+     {
+         long response;
++        char user[20], *pass, auth_str[100];
+         curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response);
+         switch (response) {
+             case 200:
+                 status |= processResponse (rpcurl, (const char*) evbuffer_pullup (buf, -1), evbuffer_get_length (buf));
+                 break;
++            case 401:
++                fprintf(stderr, "Unauthorized. Please authorize:\n");
++                if ( !auth )
++                { 
++                  fprintf(stderr, "Username: "); scanf("%s", user);
++                  pass = getpass("Password: "); /* BUG: Market 'obsolete', but what the heck! */
++
++                  sprintf(auth_str, "%s:%s", user, pass);
++                  auth = tr_strdup(auth_str);
++                }
+             case 409:
+                 /* Session id failed. Our curl header func has already
+                  * pulled the new session id from this response's headers,

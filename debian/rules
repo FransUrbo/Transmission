@@ -28,9 +28,11 @@ endif
 
 # nostrip is handled by dh_strip
 
+include /usr/share/quilt/quilt.make
+
 ################################################################################
 
-config: config-stamp
+config: patch config-stamp
 config-stamp:
 	dh_testdir
 
@@ -86,7 +88,7 @@ distclean:
 	[ ! -f Makefile ] || ( touch config.status && $(MAKE) distclean )
 	rm -f build-stamp configure-stamp
 
-clean: config-clean distclean
+clean: unpatch config-clean distclean
 	dh_testdir
 	dh_testroot
 

@@ -1,3 +1,9 @@
+transmission (2.82~svn14216.2) unstable; urgency=low
+
+  * Add a quilt patch to ask for authentication in transmission-remote.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Mon, 30 Dec 2013 12:25:52 +0100
+
 transmission (2.82~svn14216) unstable; urgency=low
 
   * New upstream release.
