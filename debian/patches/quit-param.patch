@@ -1,0 +1,72 @@
+--- a/daemon/remote.c
++++ b/daemon/remote.c
+@@ -312,6 +312,7 @@
+     { 'y', "lpd",                    "Enable local peer discovery (LPD)", "y",  0, NULL },
+     { 'Y', "no-lpd",                 "Disable local peer discovery (LPD)", "Y",  0, NULL },
+     { 941, "peer-info",              "List the current torrent(s)' peers", "pi",  0, NULL },
++    { 780, "quit",                   "Shutdown (send 'quit' to) server", NULL, 0, NULL },
+     {   0, NULL,                     NULL, NULL, 0, NULL }
+ };
+ 
+@@ -371,6 +372,7 @@
+       case 820: /* UseSSL */
+       case 't': /* set current torrent */
+       case 'V': /* show version number */
++      case 780: /* Shutdown (send 'quit' to) server */
+         return 0;
+ 
+       case 'c': /* incomplete-dir */
+@@ -1965,6 +1967,13 @@
+                         status |= EXIT_FAILURE;
+                     }
+                     break;
++
++                case 780:
++                    tadd = tr_new0 (tr_variant, 1);
++                    tr_variantInitDict (tadd, 1);
++                    tr_variantDictAddStr (tadd, TR_KEY_method, "session-quit" );
++                    tr_variantDictAddDict (tadd, ARGUMENTS, 0);
++                    break;
+             }
+         }
+         else if (stepMode == MODE_TORRENT_GET)
+--- a/libtransmission/rpcimpl.c
++++ b/libtransmission/rpcimpl.c
+@@ -15,6 +15,7 @@
+ #include <errno.h>
+ #include <stdlib.h> /* strtol */
+ #include <string.h> /* strcmp */
++#include <signal.h>
+ 
+ #ifdef HAVE_ZLIB
+  #include <zlib.h>
+@@ -2119,6 +2120,21 @@
+ ***/
+ 
+ static const char*
++sessionShutdown (tr_session               * session,
++                 tr_variant               * args_in,
++                 tr_variant               * args_out UNUSED,
++                 struct tr_rpc_idle_data  * idle_data UNUSED)
++{
++  // send SIGTERM to self
++  kill(getpid(), 15);
++  return NULL;
++}
++
++/***
++****
++***/
++
++static const char*
+ sessionClose (tr_session               * session,
+               tr_variant               * args_in UNUSED,
+               tr_variant               * args_out UNUSED,
+@@ -2149,6 +2165,7 @@
+   { "session-get",           true,  sessionGet          },
+   { "session-set",           true,  sessionSet          },
+   { "session-stats",         true,  sessionStats        },
++  { "session-quit",          true,  sessionShutdown     },
+   { "torrent-add",           false, torrentAdd          },
+   { "torrent-get",           true,  torrentGet          },
+   { "torrent-remove",        true,  torrentRemove       },
