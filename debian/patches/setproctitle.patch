@@ -1,0 +1,241 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -120,6 +120,7 @@
+ PKG_CHECK_MODULES(OPENSSL, [openssl >= $OPENSSL_MINIMUM], , [CHECK_SSL()])
+ PKG_CHECK_MODULES(LIBCURL, [libcurl >= $CURL_MINIMUM])
+ PKG_CHECK_MODULES(LIBEVENT, [libevent >= $LIBEVENT_MINIMUM])
++CHECK_SETPROCTITLE()
+ AC_PATH_ZLIB
+ 
+ AC_SYS_LARGEFILE
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -6,6 +6,7 @@
+     @LIBCURL_CFLAGS@ \
+     @SYSTEMD_DAEMON_CFLAGS@ \
+     @ZLIB_CFLAGS@ \
++    @SETPROCTITLE_CFLAGS@ \
+     @PTHREAD_CFLAGS@
+ 
+ AM_LDFLAGS = \
+@@ -34,6 +35,7 @@
+     @INTLLIBS@ \
+     @SYSTEMD_DAEMON_LIBS@ \
+     @ZLIB_LIBS@ \
++    @SETPROCTITLE_LIBS@ \
+     @PTHREAD_LIBS@
+ 
+ noinst_HEADERS = \
+--- a/daemon/remote.c
++++ b/daemon/remote.c
+@@ -2432,11 +2432,20 @@
+ main (int argc, char ** argv)
+ {
+     int port = DEFAULT_PORT;
++    int argc_copy;
++    char ** argv_copy;
+     char * host = NULL;
+     char * rpcurl = NULL;
+     int exit_status = EXIT_SUCCESS;
+ 
+-    if (argc < 2) {
++    /* Make a copy of argc and argv - setproctitle() resets them */
++    argc_copy = argc;
++    argv_copy = tr_argvdup( argv );
++#ifdef HAVE_SETPROCTITLE
++    setproctitle(""); /* Just clear the commandline ASAP to avoid any pws to show */
++#endif
++
++    if( argc_copy < 2 ) {
+         showUsage ();
+         return EXIT_FAILURE;
+     }
+@@ -2445,13 +2454,17 @@
+     tr_formatter_size_init (DISK_K,DISK_K_STR, DISK_M_STR, DISK_G_STR, DISK_T_STR);
+     tr_formatter_speed_init (SPEED_K, SPEED_K_STR, SPEED_M_STR, SPEED_G_STR, SPEED_T_STR);
+ 
+-    getHostAndPortAndRpcUrl (&argc, argv, &host, &port, &rpcurl);
++    getHostAndPortAndRpcUrl (&argc_copy, argv_copy, &host, &port, &rpcurl);
+     if (host == NULL)
+         host = tr_strdup (DEFAULT_HOST);
+     if (rpcurl == NULL)
+         rpcurl = tr_strdup_printf ("%s:%d%s", host, port, DEFAULT_URL);
+ 
+-    exit_status = processArgs (rpcurl, argc, (const char**)argv);
++#ifdef HAVE_SETPROCTITLE
++    setproctitle("%s:%d", host, port);
++#endif
++
++    exit_status = processArgs (rpcurl, argc_copy, (const char**)argv_copy);
+ 
+     tr_free (host);
+     tr_free (rpcurl);
+--- a/libtransmission/Makefile.am
++++ b/libtransmission/Makefile.am
+@@ -12,6 +12,7 @@
+   @LIBCURL_CFLAGS@ \
+   @OPENSSL_CFLAGS@ \
+   @PTHREAD_CFLAGS@ \
++  @SETPROCTITLE_CFLAGS@ \
+   @ZLIB_CFLAGS@
+ 
+ noinst_LIBRARIES = libtransmission.a
+--- a/libtransmission/utils.c
++++ b/libtransmission/utils.c
+@@ -727,6 +727,62 @@
+ *****
+ ****/
+ 
++/* http://www.koders.com/c/fidB22F56DFCBBDCCF5A4E8EC2ACA55C44EB40A44CE.aspx?s=md5 */
++char **
++tr_argvdup( char ** argv )
++{
++    int argc;
++    char **copy;
++  
++    if( argv == NULL )
++        return NULL;
++  
++    /* the vector */
++    for( argc = 0; argv[argc] != NULL; argc++ );
++    copy = (char **) malloc( (argc + 1) * sizeof (char *) );
++    if( copy == NULL )
++        return NULL;
++  
++    /* the strings */
++    for( argc = 0; argv[argc] != NULL; argc++ )
++    {
++        int len = strlen( argv[argc] );
++        copy[argc] = malloc( sizeof (char *) * (len + 1) );
++        if( copy[argc] == NULL )
++        {
++            tr_argvfree( copy );
++            return NULL;
++        }
++
++        strcpy( copy[argc], argv[argc] );
++    }
++
++    copy[argc] = NULL;
++    return copy;
++}
++
++/* http://www.koders.com/c/fidB22F56DFCBBDCCF5A4E8EC2ACA55C44EB40A44CE.aspx?s=md5 */
++void
++tr_argvfree( char **vector )
++{
++    register char **scan;
++
++    if( vector != NULL )
++    {
++        for( scan = vector; *scan != NULL; scan++ )
++        {
++            free( *scan );
++        }
++
++        free (vector);
++    }
++}
++
++
++/****
++*****
++****/
++
+ uint64_t
+ tr_time_msec (void)
+ {
+--- a/libtransmission/utils.h
++++ b/libtransmission/utils.h
+@@ -226,6 +226,9 @@
+ 
+ void* tr_valloc (size_t bufLen);
+ 
++char ** tr_argvdup( char ** argv );
++void tr_argvfree( char **vector );
++
+ /**
+  * @brief make a newly-allocated copy of a substring
+  * @param in is a void* so that callers can pass in both signed & unsigned without a cast
+--- /dev/null
++++ b/m4/check-setproctitle.m4
+@@ -0,0 +1,79 @@
++# ===========================================================================
++#               http://autoconf-archive.cryp.to/check_ssl.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   CHECK_SETPROCTITLE
++#
++# DESCRIPTION
++#
++#   If SetProcTitle is found the include directory gets added to CFLAGS and
++#   CXXFLAGS as well as '-DHAVE_SETPROCTITLE', '-lsetproctitle' get added to
++#   LIBS, and the libraries location gets added to LDFLAGS. Finally
++#   'HAVE_SETPROCTITLE' gets set to 'yes' for use in your Makefile.in I use it like
++#   so (valid for gmake):
++#
++#       HAVE_SETPROCTITLE = @HAVE_SETPROCTITLE@
++#       ifeq ($(HAVE_SETPROCTITLE),yes)
++#           SRCS+= @srcdir@/my_file_that_needs_setproctitle.c
++#       endif
++#
++#   For bsd 'bmake' use:
++#
++#       .if ${HAVE_SETPROCTITLE} == "yes"
++#           SRCS+= @srcdir@/my_file_that_needs_setproctitle.c
++#       .endif
++#
++# LAST MODIFICATION
++#
++#   2009-02-03
++#
++# COPYLEFT
++#
++#   Copyright (c) 2009 Turbo Fredriksson <turbo@bayour.com>
++#
++#   Copying and distribution of this file, with or without modification, are
++#   permitted in any medium without royalty provided the copyright notice
++#   and this notice are preserved.
++
++AC_DEFUN([CHECK_BSD_SETPROCTITLE],
++[
++	AC_CHECK_LIB([bsd], [setproctitle_init],
++	[
++		dnl SUCCESS - libbdb:setproctitle() found.
++		PKG_CHECK_MODULES(
++			[libbsd],
++			[libbsd >= 0.5.0],
++			[
++				SETPROCTITLE_CFLAGS="-DHAVE_SETPROCTITLE";
++				SETPROCTITLE_LIBS="-L${libdir} -Wl,-z,nodlopen -Wl,-u,libbsd_init_func -lbsd-ctor -lbsd";
++			],
++			[AC_MSG_ERROR([libbsd >= 0.6.0 required])])
++	], [
++		dnl FAIL - libbdb:setproctitle() not found.
++		AC_MSG_ERROR([unable to find the setproctitle() function])
++	])
++])dnl
++
++AC_DEFUN([CHECK_SETPROCTITLE],
++[
++	AC_CHECK_LIB([setproctitle], [setproctitle],
++	[
++		dnl SUCCESS - libsetproctitle:setproctitle() found.
++		PKG_CHECK_MODULES(
++			[libsetproctitle],
++			[libsetproctitle >= 0.3.2],
++			[
++				SETPROCTITLE_CFLAGS="-DHAVE_SETPROCTITLE";
++				SETPROCTITLE_LIBS="-lsetproctitle";
++			],
++			[CHECK_BSD_SETPROCTITLE()])
++	], [
++		dnl FAIL - libsetproctitle:setproctitle() didn't exist. Try libdb:setproctitle()
++		CHECK_BSD_SETPROCTITLE()
++	])
++])dnl
++
++AC_SUBST(SETPROCTITLE_CFLAGS)
++AC_SUBST(SETPROCTITLE_LIBS)

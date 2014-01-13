@@ -1,2 +1,3 @@
 quit-param.patch
 authorize.patch
+setproctitle.patch

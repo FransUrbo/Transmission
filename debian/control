@@ -6,7 +6,7 @@ Uploaders: Philipp Benner <pbenner@uni-osnabrueck.de>
 XS-DM-Upload-Allowed: yes
 Build-Depends: debhelper (>= 7), autotools-dev, libgtk-3-dev, libevent-dev,
  libglib2.0-dev, libssl-dev, libcurl-dev, chrpath, python, libappindicator3-dev,
- intltool
+ intltool, libbsd-dev (>= 0.6.0-1)
 Standards-Version: 3.8.0
 Vcs-Browser: http://svn.debian.org/wsvn/collab-maint/deb-maint/transmission/
 Vcs-Svn: svn://svn.debian.org/collab-maint/deb-maint/transmission/

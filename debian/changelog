@@ -1,3 +1,9 @@
+transmission (2.82~svn14216.4) unstable; urgency=low
+
+  * Add a quilt patch to fix the proc title (hide passwords).
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Mon, 13 Jan 2014 16:53:12 +0100
+
 transmission (2.82~svn14216.3) unstable; urgency=low
 
   * Add a quilt patch to send 'quit' to daemon.
