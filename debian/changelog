@@ -1,3 +1,9 @@
+transmission (2.82~svn14216.5) unstable; urgency=low
+
+  * Add a quilt patch to modify the output format string size.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Wed, 15 Jan 2014 21:47:37 +0100
+
 transmission (2.82~svn14216.4) unstable; urgency=low
 
   * Add a quilt patch to fix the proc title (hide passwords).

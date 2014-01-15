@@ -1,3 +1,4 @@
 quit-param.patch
 authorize.patch
 setproctitle.patch
+output-format.patch
