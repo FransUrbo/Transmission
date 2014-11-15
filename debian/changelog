@@ -1,3 +1,9 @@
+transmission (2.84~svn14344.5) unstable; urgency=low
+
+  * Update to new upstream version.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Sat, 15 Nov 2014 12:45:54 +0000
+
 transmission (2.82~svn14216.5) unstable; urgency=low
 
   * Add a quilt patch to modify the output format string size.
