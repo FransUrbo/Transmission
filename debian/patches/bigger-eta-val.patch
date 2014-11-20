@@ -18,3 +18,12 @@
                    (int)id, errorMark,
                      doneStr,
                      haveStr,
+@@ -1333,7 +1333,7 @@
+             }
+         }
+ 
+-        printf( "Sum:         %10s            %8.1f  %8.1f\n",
++        printf( "Sum:         %10s            %10.1f  %8.1f\n",
+                 strlsize (haveStr, total_size, sizeof (haveStr)),
+                 total_up/ (double)tr_speed_K,
+                 total_down/ (double)tr_speed_K);
