@@ -1,3 +1,9 @@
+transmission (2.84~svn14344.6) unstable; urgency=low
+
+  * Increase the ETA string size to fit 'xxxx days'.
+
+ -- Turbo Fredriksson <turbo@bayour.com>  Thu, 20 Nov 2014 12:59:18 +0000
+
 transmission (2.84~svn14344.5) unstable; urgency=low
 
   * Update to new upstream version.
